@@ -4,7 +4,6 @@
 class Network {
     constructor (number_of_sensor_nodes) {
         this.sensorNodes = new Array(number_of_sensor_nodes);
-        this.links = [];
     }
 
     /**
@@ -13,11 +12,4 @@ class Network {
     addSensorNodes(nodes) {
         this.sensorNodes = nodes;
     }
-
-    /**
-     * Function to add links. 
-     */
-    addLinks (node_links) {
-        this.links = node_links;
-    } 
 }

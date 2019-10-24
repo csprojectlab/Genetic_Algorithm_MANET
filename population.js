@@ -8,4 +8,12 @@ class Population {
        this.bestNetworkIndex = 0;
     }
 
+    /**
+     * boot function. 
+     * Using temperature and cooling rate parameters. 
+     */
+    boot (sensor_networks, _temperature, cooling_rate) {
+        
+    }
+
 }

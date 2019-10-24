@@ -1,6 +1,7 @@
 class SensorNode {
     constructor (x, y) {
         this.position = createVector (x, y);
+        this.links = [];
     }
 
     /**
@@ -10,5 +11,12 @@ class SensorNode {
         let otherPosition = otherSensorNode.position;
         let distance = this.position.dist(otherPosition);
         return distance;
+    }
+
+    /**
+     * Function to add links. 
+     */
+    addLinks (node_links) {
+        this.links = node_links;
     }
 }

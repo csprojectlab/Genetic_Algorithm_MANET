@@ -1,6 +1,14 @@
 const C_WIDTH = 1100,
       C_HEIGHT = 650,       // Canvas size. 
       RESOLUTION = 30;      // Grid parameter
+let numberOfSensorNodes = 12;
+
+/**
+ * Function to randomly generate sensor network. 
+ */
+function generateSensorNetwork () {
+    let sensorNodes = [];
+}
 
 /**
  * Setup function. 
