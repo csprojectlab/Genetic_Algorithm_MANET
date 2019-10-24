@@ -1,6 +1,6 @@
 const C_WIDTH = 1100,
       C_HEIGHT = 650,       // Canvas size. 
-      RESOLUTION = 20;      // Grid parameter
+      RESOLUTION = 30;      // Grid parameter
 
 /**
  * Setup function. 
@@ -35,9 +35,11 @@ function draw () {
 }
 
 function backgroundGrid () {
-    fill(255);
-    stroke(255)
-    line (30, 30, 70, 70)
+    stroke(0,0,255)
+    for (let i = RESOLUTION; i < width / 2; i += RESOLUTION)
+        line (i, 0, i, height / 2);     // Vertical lines. 
+    for (let i = RESOLUTION; i < height / 2; i += RESOLUTION)
+        line (0, i, width/ 2, i);       // Horizontal lines.     
 }
 
 function displaySimulation() {
