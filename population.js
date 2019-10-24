@@ -1,15 +1,11 @@
 class Population {
-    constructor () {
-        this.resolution = 20;       // For displaying grid. 
+    constructor (population_size, mutation_rate, dominance, tournament_size) {
+       this.size = population_size;
+       this.mutationRate = mutation_rate;
+       this.elitism = dominance;
+       this.networks = [];
+       this.bestFitnessValue = 0;
+       this.bestNetworkIndex = 0;
     }
 
-    /**
-     * Display the background grid. 
-     */
-    displayGrid () {
-        stroke(0, 0, 255);
-        strokeWeight(1);
-        for (let i = this.resolution; i < width; i++)
-            line (i, 0, i, height / 2);
-    }
 }
