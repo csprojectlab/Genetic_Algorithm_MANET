@@ -1,5 +1,6 @@
 const C_WIDTH = 1100,
-      C_HEIGHT = 650;       // Canvas size. 
+      C_HEIGHT = 650,       // Canvas size. 
+      RESOLUTION = 20;      // Grid parameter
 
 /**
  * Setup function. 
@@ -15,7 +16,6 @@ function setup () {
 function draw () {
     background(0);
     push();
-        translate(0, 0);
         displaySimulation();
     pop();
     push();
@@ -34,8 +34,14 @@ function draw () {
     pop();
 }
 
-function displaySimulation() {
+function backgroundGrid () {
+    fill(255);
+    stroke(255)
+    line (30, 30, 70, 70)
+}
 
+function displaySimulation() {
+    backgroundGrid();
 }
 
 function displayParameters() {
