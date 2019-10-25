@@ -1,5 +1,5 @@
-const C_WIDTH = 1100,
-      C_HEIGHT = 650,       // Canvas size. 
+const C_WIDTH = 1200,
+      C_HEIGHT = 660,       // Canvas size. 
       RESOLUTION = 30,      // Grid parameter
       COMMUNICATION_RANGE = 90,
       POPULATION_SIZE = 10,
@@ -8,7 +8,8 @@ const C_WIDTH = 1100,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03;
 var numberOfSensorNodes = 12,
-    population;
+    population,
+    grid = [];          // Background blue grid. 
 
 /**
  * Function to randomly generate sensor network. 
@@ -29,12 +30,24 @@ function generateSensorNetwork () {
 }
 
 /**
+ * Function to generate grid
+ */
+function generateBackgroundGrid () {
+    let temp = [];
+    for (let j = 0; j < height / 2; j += RESOLUTION) 
+        for (let i = 0; i < width / 2; i += RESOLUTION)
+            temp.push (new Grid (i, j));
+    return temp;
+}
+
+/**
  * Setup function. 
  */
 function setup () {
     createCanvas(C_WIDTH, C_HEIGHT);
     let sensorNetwork = generateSensorNetwork(),
         elitism = true;
+    grid = generateBackgroundGrid();
     population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE);
     population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
 }
@@ -65,11 +78,8 @@ function draw () {
 }
 
 function backgroundGrid () {
-    stroke(0,0,255)
-    for (let i = RESOLUTION; i < width / 2; i += RESOLUTION)
-        line (i, 0, i, height / 2);     // Vertical lines. 
-    for (let i = RESOLUTION; i < height / 2; i += RESOLUTION)
-        line (0, i, width/ 2, i);       // Horizontal lines.     
+   for (let g of grid)
+        g.show();
 }
 
 function displaySimulation() {
