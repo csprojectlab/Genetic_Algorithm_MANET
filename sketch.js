@@ -1,30 +1,30 @@
 const C_WIDTH = 1200,
       C_HEIGHT = 660,       // Canvas size. 
       RESOLUTION = 30,      // Grid parameter
-      COMMUNICATION_RANGE = 90,
+      COMMUNICATION_RANGE = 80,
       POPULATION_SIZE = 10,
       MUTATION_RATE = 0.03,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03;
-var numberOfSensorNodes = 12,
+var numberOfSensorNodes = 20,
     population,
     grid = [];          // Background blue grid. 
-
+var net;
 /**
  * Function to randomly generate sensor network. 
  */
 function generateSensorNetwork () {
-    let xoffset = COMMUNICATION_RANGE - 50,     // Carefull here. 
-        yoffset = (height / 2) - 40,
-        sensorNetwork = [];
+    let sensorNetwork = [];
     for (let i = 1; i <= numberOfSensorNodes; i++) 
-        sensorNetwork.push (new SensorNode(xoffset * i, yoffset));
+        sensorNetwork.push (new SensorNode(random (width / 11, width / 11 + 300), random (height / 7, height / 7 + 150)));
     for (let i = 0; i < numberOfSensorNodes; i++) {
-        if (i > 0)
-            sensorNetwork[i].addLink(i - 1);
-        if (i < numberOfSensorNodes - 1)
-            sensorNetwork[i].addLink(i  + 1);
+       for (let j = i + 1; j < numberOfSensorNodes; j++) {
+           if (sensorNetwork[i].distanceFrom(sensorNetwork[j]) < COMMUNICATION_RANGE) {
+               sensorNetwork[i].addLink(sensorNetwork[j]);
+               sensorNetwork[j].addLink(sensorNetwork[i]);
+           }
+       }
     }
     return sensorNetwork;
 }
@@ -50,6 +50,8 @@ function setup () {
     grid = generateBackgroundGrid();
     population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE);
     population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
+    net = new Network(sensorNetwork.length)
+    net.addSensorNodes(sensorNetwork);
 }
 
 /**
@@ -58,6 +60,9 @@ function setup () {
  */
 function draw () {
     background(0);
+    stroke (255, 255, 0);
+    noFill()
+    rect (width / 11, height / 7, 300, 150)     // This is the range for initial generation of sensors. 
     push();
         displaySimulation();
     pop();
@@ -84,6 +89,7 @@ function backgroundGrid () {
 
 function displaySimulation() {
     backgroundGrid();
+    net.display();
 }
 
 function displayParameters() {

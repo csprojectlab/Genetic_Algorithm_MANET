@@ -26,4 +26,19 @@ class SensorNode {
     addLink (sensor_node) {
         this.links.push(sensor_node);
     }
+
+    /**
+     * Display function. 
+     */
+    display () {
+        push ();
+            noStroke();
+            fill(0, 255, 0);
+            ellipse (this.position.x, this.position.y, 8, 8);
+            stroke(255);
+            strokeWeight(0.2)
+            for (let i = 0; i < this.links.length; i++)
+                line (this.position.x, this.position.y, this.links[i].position.x, this.links[i].position.y);
+        pop ();
+    }
 }

@@ -12,4 +12,12 @@ class Network {
     addSensorNodes(nodes) {
         this.sensorNodes = nodes;
     }
+
+    /**
+     * Display the sensor network. 
+     */
+    display () {
+        for (let node of this.sensorNodes)
+            node.display();
+    }
 }
