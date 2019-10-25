@@ -1,13 +1,31 @@
 const C_WIDTH = 1100,
       C_HEIGHT = 650,       // Canvas size. 
-      RESOLUTION = 30;      // Grid parameter
-let numberOfSensorNodes = 12;
+      RESOLUTION = 30,      // Grid parameter
+      COMMUNICATION_RANGE = 90,
+      POPULATION_SIZE = 10,
+      MUTATION_RATE = 0.03,
+      TOURNAMENT_SIZE = 10,
+      TEMPERATURE = 1000,
+      COOLING_RATE = 0.03;
+var numberOfSensorNodes = 12,
+    population;
 
 /**
  * Function to randomly generate sensor network. 
  */
 function generateSensorNetwork () {
-    let sensorNodes = [];
+    let xoffset = COMMUNICATION_RANGE - 50,     // Carefull here. 
+        yoffset = (height / 2) - 40,
+        sensorNetwork = [];
+    for (let i = 1; i <= numberOfSensorNodes; i++) 
+        sensorNetwork.push (new SensorNode(xoffset * i, yoffset));
+    for (let i = 0; i < numberOfSensorNodes; i++) {
+        if (i > 0)
+            sensorNetwork[i].addLink(i - 1);
+        if (i < numberOfSensorNodes - 1)
+            sensorNetwork[i].addLink(i  + 1);
+    }
+    return sensorNetwork;
 }
 
 /**
@@ -15,6 +33,10 @@ function generateSensorNetwork () {
  */
 function setup () {
     createCanvas(C_WIDTH, C_HEIGHT);
+    let sensorNetwork = generateSensorNetwork(),
+        elitism = true;
+    population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE);
+    population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
 }
 
 /**

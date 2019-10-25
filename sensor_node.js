@@ -14,9 +14,16 @@ class SensorNode {
     }
 
     /**
-     * Function to add links. 
+     * Function to add completely new links. 
      */
     addLinks (node_links) {
         this.links = node_links;
+    }
+
+    /**
+     * Function to add a single link. 
+     */
+    addLink (sensor_node) {
+        this.links.push(sensor_node);
     }
 }
