@@ -1,7 +1,6 @@
 /**
  * Network class. 
  */
-let temp = [];
 class Network {
     constructor (number_of_sensor_nodes) {
         this.sensorNodes = new Array(number_of_sensor_nodes);
@@ -41,7 +40,6 @@ class Network {
                 for (let r = 0; r < grid.length; r++) {
                     if (!coveredGrids.includes(r) && collideLineRect (pointA.x, pointA.y, pointB.x, pointB.y, grid[r].position.x, grid[r].position.y, grid[r].resolution, grid[r].resolution)) {
                         coveredGrids.push(r);
-                        temp.push(grid[r]);
                         cellsCovered++;
                     }
                 }

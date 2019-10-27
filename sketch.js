@@ -106,10 +106,6 @@ function draw () {
 function backgroundGrid () {
    for (let g of grid)
         g.show();
-   for (let i = 0; i < temp.length; i++) {
-       fill(150);
-       rect (temp[i].position.x, temp[i].position.y, 30, 30)
-   }
 }
 
 function displaySimulation() {
