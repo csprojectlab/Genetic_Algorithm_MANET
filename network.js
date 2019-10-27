@@ -20,4 +20,11 @@ class Network {
         for (let node of this.sensorNodes)
             node.display();
     }
+
+    /**
+     * Calculating fitness of network. 
+     */
+    calculateFitness () {
+        
+    }
 }

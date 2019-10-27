@@ -10,15 +10,21 @@ const C_WIDTH = 1200,
 var numberOfSensorNodes = 9,
     population,
     grid = [],          // Background blue grid. 
-    yellowBox = { x : 210, y : 120, width : 180, height : 90};
+    yellowBox = { x : 210, y : 120, width : 150, height : 90};
 var net;
 /**
  * Function to randomly generate sensor network. 
  */
 function generateSensorNetwork () {
     let sensorNetwork = [];
-    for (let i = 1; i <= numberOfSensorNodes; i++) 
-        sensorNetwork.push (new SensorNode(random (yellowBox.x, yellowBox.x + yellowBox.width), random (yellowBox.y, yellowBox.y + yellowBox.height)));
+    let i = 1;
+    while (i <= numberOfSensorNodes) {
+        let newSensorNode = new SensorNode(random (yellowBox.x, yellowBox.x + yellowBox.width), random (yellowBox.y, yellowBox.y + yellowBox.height));
+        if (!isCloseEnough(sensorNetwork, newSensorNode)) {
+            sensorNetwork.push (newSensorNode);
+            i++;
+        }
+    }
     for (let i = 0; i < numberOfSensorNodes; i++) {
        for (let j = i + 1; j < numberOfSensorNodes; j++) {
            if (sensorNetwork[i].distanceFrom(sensorNetwork[j]) < COMMUNICATION_RANGE) {
@@ -28,6 +34,18 @@ function generateSensorNetwork () {
        }
     }
     return sensorNetwork;
+}
+
+/**
+ * Function to check if node is too close to any other sensor node. 
+ */
+function isCloseEnough (sensorNetwork, sensorNode) {
+    for (let i = 0; i < sensorNetwork.length; i++) {
+        let d = dist (sensorNetwork[i].position.x, sensorNetwork[i].position.y, sensorNode.position.x, sensorNode.position.y);
+        if (d < 20)
+            return true;
+    }
+    return false;
 }
 
 /**
