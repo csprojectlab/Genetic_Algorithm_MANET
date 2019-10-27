@@ -7,10 +7,10 @@ const C_WIDTH = 1200,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03;
-var numberOfSensorNodes = 9,
+var numberOfSensorNodes = 3,
     population,
     grid = [],          // Background blue grid. 
-    yellowBox = { x : 210, y : 120, width : 150, height : 90};
+    yellowBox = { x : 210, y : 120, width : 120, height : 90};          // This is very important aspect. 
 var net;
 /**
  * Function to randomly generate sensor network. 
@@ -65,12 +65,14 @@ function generateBackgroundGrid () {
 function setup () {
     createCanvas(C_WIDTH, C_HEIGHT);
     let sensorNetwork = generateSensorNetwork(),
-        elitism = true;
+        elitism = true,
+        numberOfCells = findNumberOfCells();
     grid = generateBackgroundGrid();
-    population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE);
+    population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE, numberOfCells);
     population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
     net = new Network(sensorNetwork.length)
     net.addSensorNodes(sensorNetwork);
+    console.log(net.calculateFitness())
 }
 
 /**
@@ -104,6 +106,10 @@ function draw () {
 function backgroundGrid () {
    for (let g of grid)
         g.show();
+   for (let i = 0; i < temp.length; i++) {
+       fill(150);
+       rect (temp[i].position.x, temp[i].position.y, 30, 30)
+   }
 }
 
 function displaySimulation() {

@@ -1,5 +1,5 @@
 class Population {
-    constructor (population_size, mutation_rate, dominance, tournament_size) {
+    constructor (population_size, mutation_rate, dominance, tournament_size, cell_count) {
        this.size = population_size;
        this.mutationRate = mutation_rate;
        this.elitism = dominance;
@@ -7,6 +7,7 @@ class Population {
        this.tournamentSize = tournament_size;
        this.bestFitnessValue = 0;
        this.bestNetworkIndex = 0;
+       this.numberOfCells = cell_count;
     }
 
     /**
