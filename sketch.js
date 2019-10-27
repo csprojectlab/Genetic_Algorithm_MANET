@@ -7,9 +7,10 @@ const C_WIDTH = 1200,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03;
-var numberOfSensorNodes = 20,
+var numberOfSensorNodes = 9,
     population,
-    grid = [];          // Background blue grid. 
+    grid = [],          // Background blue grid. 
+    yellowBox = { x : 210, y : 120, width : 180, height : 90};
 var net;
 /**
  * Function to randomly generate sensor network. 
@@ -17,7 +18,7 @@ var net;
 function generateSensorNetwork () {
     let sensorNetwork = [];
     for (let i = 1; i <= numberOfSensorNodes; i++) 
-        sensorNetwork.push (new SensorNode(random (width / 11, width / 11 + 300), random (height / 7, height / 7 + 150)));
+        sensorNetwork.push (new SensorNode(random (yellowBox.x, yellowBox.x + yellowBox.width), random (yellowBox.y, yellowBox.y + yellowBox.height)));
     for (let i = 0; i < numberOfSensorNodes; i++) {
        for (let j = i + 1; j < numberOfSensorNodes; j++) {
            if (sensorNetwork[i].distanceFrom(sensorNetwork[j]) < COMMUNICATION_RANGE) {
@@ -60,9 +61,6 @@ function setup () {
  */
 function draw () {
     background(0);
-    stroke (255, 255, 0);
-    noFill()
-    rect (width / 11, height / 7, 300, 150)     // This is the range for initial generation of sensors. 
     push();
         displaySimulation();
     pop();
@@ -80,6 +78,9 @@ function draw () {
         line (0, 0, width, 0);
         displayGraph();
     pop();
+    stroke (255, 255, 0);
+    noFill()
+    rect (yellowBox.x, yellowBox.y, yellowBox.width, yellowBox.height)     // This is the range for initial generation of sensors. 
 }
 
 function backgroundGrid () {
