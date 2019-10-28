@@ -1,10 +1,14 @@
 /**
  * Network class. 
+ * Network can have same covered ratio with different fitness.... 
+ * The best is the one with 1 as covered ratio and higher fitness value.... 
+ * Fitness is inversely proportional to number of sensor nodes used and number of links in network.... 
  */
 class Network {
     constructor (number_of_sensor_nodes) {
         this.sensorNodes = new Array(number_of_sensor_nodes);
         this.fitness = 0;
+        this.coveredRatio = 0;      // It should reach 1
     }
 
     /**
@@ -18,8 +22,7 @@ class Network {
      * Display the sensor network. 
      */
     display () {
-        for (let node of this.sensorNodes)
-            node.display();
+        this.sensorNodes.map ((node) => node.display());
     }
 
     /**
@@ -61,9 +64,9 @@ class Network {
      */
     calculateFitness (total_cells) {
         // find cells covered by this network. 
-        let coveredRatio =  this.findCellsCovered() / total_cells;
-        let linkCount = this.findNumberOfLinks();
         // find number of sensors and number of links...... 
-        return coveredRatio;
+        this.coveredRatio =  this.findCellsCovered() / total_cells,
+        this.fitness = this.coveredRatio / (this.sensorNodes.length * this.findNumberOfLinks());
+        return this.fitness;
     }
 }
