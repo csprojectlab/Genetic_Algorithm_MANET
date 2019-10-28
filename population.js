@@ -1,5 +1,5 @@
 class Population {
-    constructor (population_size, mutation_rate, dominance, tournament_size, cell_count) {
+    constructor (population_size, mutation_rate, dominance, tournament_size, cell_count, generation_count) {
        this.size = population_size;
        this.mutationRate = mutation_rate;
        this.elitism = dominance;
@@ -8,6 +8,8 @@ class Population {
        this.bestNetworkFitness = 0;
        this.bestNetworkIndex = 0;
        this.numberOfCells = cell_count;
+       this.generations = generation_count;
+       this.currentGeneration = 1;
     }
 
     /**
@@ -66,6 +68,60 @@ class Population {
             }
         })
         this.bestNetworkFitness = fittestValue;
+    }
+
+    /**
+     * tournament selection funciton. 
+     * Creates a pool according to tournament size at random. 
+     * Selects the fittest from the tournament bucket. 
+     * Returns the fittest network
+     */
+    tournamentSelection () {
+        let networkTournamentIndex = [],
+            randomIndex;
+        // Selecting some of the networks from population at random... 
+        // Storing the indices... 
+        while (networkTournamentIndex.length < this.tournamentSize) {
+            randomIndex = floor (random () * this.size);
+            if (!networkTournamentIndex.includes(randomIndex)) 
+                networkTournamentIndex.push(randomIndex);
+        }
+        let fittestNetwork = this.networks[networkTournamentIndex[0]],
+            fittestValue = this.networks[networkTournamentIndex[0]].calculateFitness(this.numberOfCells),
+            fitValue = 0;
+        networkTournamentIndex.forEach ((networkIndex, index) => {
+            if (index == 0)   return;
+            fitValue = this.networks[networkIndex].calculateFitness(this.numberOfCells);
+            if (fitValue > fittestValue) {
+                fittestValue = fitValue;
+                fittestNetwork = this.networks[networkIndex];
+            }
+        });
+        return fittestNetwork;
+    }
+
+    /**
+     * function to evolve population to next generation... 
+     */
+    evolve () {
+        this.currentGeneration++;
+        if (this.currentGeneration == this.generations)
+            return false;           // No evolution happened.... limit reached... 
+        let newNetworks = [],
+            selectedNetwork,
+            elitismOffset = 0;
+        if (this.elitism) {
+            newNetworks.push(this.networks[this.bestNetworkIndex])
+            elitismOffset = 1;
+        }
+        for (let i = elitismOffset; i < this.size; i++) {
+            selectedNetwork = this.tournamentSelection();
+            if (random (1) < 0.03)
+                selectedNetwork.addSensorNode();
+            newNetworks.push(selectedNetwork)
+        }
+        this.networks = newNetworks;
+        return true;     // Population evolved to next generation... 
     }
 
     /**

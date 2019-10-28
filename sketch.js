@@ -6,7 +6,8 @@ const C_WIDTH = 1200,
       MUTATION_RATE = 0.03,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
-      COOLING_RATE = 0.03;
+      COOLING_RATE = 0.03,
+      GENERATIONS_PER_POPULATION = 100;
 var numberOfSensorNodes = 7,
     population,
     grid = [],          // Background blue grid. 
@@ -33,6 +34,14 @@ function generateSensorNetwork () {
        }
     }
     return sensorNetwork;
+}
+
+/**
+ * Function to randomly generate sensor node...   
+ */
+function generateSensorNode () {
+    let node = new SensorNode(random (yellowBox.x, yellowBox.x + yellowBox.width), random (yellowBox.y, yellowBox.y + yellowBox.height));
+    return node;
 }
 
 /**
@@ -67,9 +76,8 @@ function setup () {
         elitism = true,
         numberOfCells = findNumberOfCells();
     grid = generateBackgroundGrid();
-    population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE, numberOfCells);
+    population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE, numberOfCells, GENERATIONS_PER_POPULATION);
     population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
-    population.fittest();
 }
 
 /**
@@ -107,7 +115,12 @@ function backgroundGrid () {
 
 function displaySimulation() {
     backgroundGrid();
+    population.fittest();
     population.display();
+    if (!population.evolve()) {
+        console.log("Population evolved.")
+        noLoop();
+    }
 }
 
 function displayParameters() {

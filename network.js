@@ -18,6 +18,21 @@ class Network {
     }
 
     /**
+     * Function to add sensor node to network.. 
+     */
+    addSensorNode () {
+        let newNode = generateSensorNode();
+        while (isCloseEnough(this.sensorNodes, newNode))
+            newNode = generateSensorNode();
+        // Now we have to generate links.... 
+        this.sensorNodes.forEach ((sensorNode) => {
+            if (newNode.distanceFrom(sensorNode) < COMMUNICATION_RANGE)
+                newNode.addLink(sensorNode);
+        });
+        this.sensorNodes.push(newNode);
+    }
+
+    /**
      * Display the sensor network. 
      */
     display () {
