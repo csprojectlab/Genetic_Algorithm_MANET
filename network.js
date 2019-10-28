@@ -33,6 +33,26 @@ class Network {
     }
 
     /**
+     * Function to delete a sensor network.... 
+     * Randomly chooses a node to delete.... 
+     */
+    deleteSensorNode () {
+        let deleteNodeIndex = floor (random(this.sensorNodes.length)),
+            deleteNode = this.sensorNodes[deleteNodeIndex];
+        // Deleting nodes from sensor network..... 
+        this.sensorNodes = this.sensorNodes.filter ((_, index) => index != deleteNodeIndex);
+        // Deleting the node's links in other nodes.... 
+        this.sensorNodes.forEach ((sensorNode) => {
+           for (let i = sensorNode.links.length; i >= 0; i--) {
+                if (sensorNode.links[i] == deleteNodeIndex)
+                    sensorNode.links.splice(i, 1);
+                else if (sensorNode.links[i] > deleteNodeIndex)
+                    sensorNode.links[i]--;
+           }
+        });
+    }
+
+    /**
      * Display the sensor network. 
      */
     display () {
@@ -45,6 +65,7 @@ class Network {
                 stroke(255);
                 strokeWeight(0.2);
                 node.links.forEach ((linkedNodeIndex) => {
+                    
                     linkedNode = this.sensorNodes[linkedNodeIndex];
                     line (node.position.x, node.position.y, linkedNode.position.x, linkedNode.position.y);
                 });
