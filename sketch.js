@@ -7,7 +7,7 @@ const C_WIDTH = 1200,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03;
-var numberOfSensorNodes = 5,
+var numberOfSensorNodes = 7,
     population,
     grid = [],          // Background blue grid. 
     yellowBox = { x : 210, y : 120, width : 120, height : 90};          // This is very important aspect. 
@@ -69,6 +69,7 @@ function setup () {
     grid = generateBackgroundGrid();
     population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE, numberOfCells);
     population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
+    population.fittest();
 }
 
 /**
@@ -106,6 +107,7 @@ function backgroundGrid () {
 
 function displaySimulation() {
     backgroundGrid();
+    population.display();
 }
 
 function displayParameters() {
