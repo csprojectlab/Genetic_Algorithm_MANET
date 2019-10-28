@@ -21,9 +21,14 @@ class Network {
      * Function to add sensor node to network.. 
      */
     addSensorNode () {
-        let newNode = generateSensorNode();
-        while (isCloseEnough(this.sensorNodes, newNode))
+        let newNode = generateSensorNode(),
+            tryLimit = 1000,        // If yellow box is full- isCloseEnough will always return true.... we need this limit to stop in such case... 
+            counter = 0;
+        while (counter < tryLimit && isCloseEnough(this.sensorNodes, newNode)) {
             newNode = generateSensorNode();
+            counter++;
+        }
+        if (counter == tryLimit)    return;
         // Now we have to generate links.... 
         this.sensorNodes.forEach ((sensorNode, index) => {
             if (newNode.distanceFrom(sensorNode) < COMMUNICATION_RANGE)
@@ -37,19 +42,29 @@ class Network {
      * Randomly chooses a node to delete.... 
      */
     deleteSensorNode () {
-        let deleteNodeIndex = floor (random(this.sensorNodes.length)),
-            deleteNode = this.sensorNodes[deleteNodeIndex];
+        let deleteNodeIndex = floor (random(this.sensorNodes.length));
         // Deleting nodes from sensor network..... 
         this.sensorNodes = this.sensorNodes.filter ((_, index) => index != deleteNodeIndex);
         // Deleting the node's links in other nodes.... 
-        this.sensorNodes.forEach ((sensorNode) => {
-           for (let i = sensorNode.links.length; i >= 0; i--) {
-                if (sensorNode.links[i] == deleteNodeIndex)
-                    sensorNode.links.splice(i, 1);
-                else if (sensorNode.links[i] > deleteNodeIndex)
-                    sensorNode.links[i]--;
-           }
-        });
+        this.sensorNodes.forEach ((sensorNode) => sensorNode.deleteSensorNode(deleteNodeIndex));
+    }
+
+    /**
+     * Function to add link between two nodes.... 
+     * Add a new link on this sensor node.... 
+     */
+    addSensorLink (sensor_index) {
+        this.sensorNodes[sensor_index].addSensorLink();
+    }
+
+    /**
+     * Function to delete a link from network.. 
+     * Both side truth.... 
+     */
+    deleteSensorLink (sensor_index, linked_sensor_index) {
+        if (sensor_index == linked_sensor_index)    return;
+        this.sensorNodes[sensor_index].deleteSensorLink (linked_sensor_index);
+        this.sensorNodes[linked_sensor_index].deleteSensorLink (sensor_index);
     }
 
     /**

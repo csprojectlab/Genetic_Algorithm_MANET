@@ -2,13 +2,13 @@ const C_WIDTH = 1200,
       C_HEIGHT = 660,       // Canvas size. 
       RESOLUTION = 30,      // Grid parameter
       COMMUNICATION_RANGE = 80,
-      POPULATION_SIZE = 1,
+      POPULATION_SIZE = 10,
       MUTATION_RATE = 0.03,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03,
       GENERATIONS_PER_POPULATION = 100;
-var numberOfSensorNodes = 8,
+var numberOfSensorNodes = 3,
     population,
     grid = [],          // Background blue grid. 
     yellowBox = { x : 210, y : 120, width : 120, height : 90};          // This is very important aspect. 
@@ -86,7 +86,7 @@ function setup () {
  * Loops 60 times a second (if it can process 60 frames.)
  */
 function draw () {
-    // background(0);
+    background(0);
     push();
         displaySimulation();
     pop();
@@ -116,12 +116,12 @@ function backgroundGrid () {
 
 function displaySimulation() {
     backgroundGrid();
-    //population.fittest();
-    // population.display();
-    // if (!population.evolve()) {
-    //     console.log("Population evolved.")
-    //     noLoop();
-    // }
+    population.fittest();
+    population.display();
+    if (!population.evolve()) {
+        console.log("Population evolved.")
+        noLoop();
+    }
 }
 
 function displayParameters() {

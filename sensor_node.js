@@ -30,6 +30,30 @@ class SensorNode {
     }
 
     /**
+     * Delete sensor node
+     */
+    deleteSensorNode (delete_node_index) {
+        for (let i = this.links.length - 1; i >= 0; i--) {
+            if (this.links[i] == delete_node_index) 
+                this.links.splice(i, 1);
+            else if (this.links[i] > delete_node_index)
+                this.links[i]--;
+        }
+    }
+
+    /**
+     * Deleting sensor link... 
+     */
+    deleteSensorLink (link_index) {
+        for (let i = this.links.length - 1; i >= 0; i--) {
+            if (this.links[i] == link_index) {
+                this.links.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    /**
      * Display function. 
      */
     display () {
