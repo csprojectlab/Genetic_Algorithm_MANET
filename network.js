@@ -29,7 +29,7 @@ class Network {
         let pointA,
             pointB,
             cellsCovered = 0,
-            coveredGrids = [];
+            coveredGrids = [];          // To count each grid only once.  ..... 
         // For each sensor node. 
         for (let sNode = 0; sNode < this.sensorNodes.length; sNode++) {
             pointA = this.sensorNodes[sNode].position;
@@ -45,7 +45,7 @@ class Network {
                 }
             }
         }
-        return cellsCovered;        // Each collision is detected twice..... 
+        return cellsCovered;
     }
 
     /**
@@ -54,6 +54,7 @@ class Network {
      */
     calculateFitness (total_cells) {
         // find cells covered by this network. 
-        return this.findCellsCovered();
+        let coveredRatio =  this.findCellsCovered() / total_cells;
+        return coveredRatio;
     }
 }

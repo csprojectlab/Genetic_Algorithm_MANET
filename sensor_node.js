@@ -36,7 +36,7 @@ class SensorNode {
         push ();
             noStroke();
             fill(0, 255, 0);
-            //ellipse (this.position.x, this.position.y, 8, 8);
+            ellipse (this.position.x, this.position.y, 8, 8);
             stroke(255);
             strokeWeight(0.2)
             for (let i = 0; i < this.links.length; i++) {
