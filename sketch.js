@@ -8,7 +8,7 @@ const C_WIDTH = 1200,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03,
       GENERATIONS_PER_POPULATION = 100;
-var numberOfSensorNodes = 7,
+var numberOfSensorNodes = 4,
     population,
     grid = [],          // Background blue grid. 
     yellowBox = { x : 210, y : 120, width : 120, height : 90};          // This is very important aspect. 
@@ -28,8 +28,8 @@ function generateSensorNetwork () {
     for (let i = 0; i < numberOfSensorNodes; i++) {
        for (let j = i + 1; j < numberOfSensorNodes; j++) {
            if (sensorNetwork[i].distanceFrom(sensorNetwork[j]) < COMMUNICATION_RANGE) {
-               sensorNetwork[i].addLink(sensorNetwork[j]);
-               sensorNetwork[j].addLink(sensorNetwork[i]);
+               sensorNetwork[i].addLink(j);
+               sensorNetwork[j].addLink(i);
            }
        }
     }

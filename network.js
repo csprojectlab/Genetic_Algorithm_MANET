@@ -25,9 +25,9 @@ class Network {
         while (isCloseEnough(this.sensorNodes, newNode))
             newNode = generateSensorNode();
         // Now we have to generate links.... 
-        this.sensorNodes.forEach ((sensorNode) => {
+        this.sensorNodes.forEach ((sensorNode, index) => {
             if (newNode.distanceFrom(sensorNode) < COMMUNICATION_RANGE)
-                newNode.addLink(sensorNode);
+                newNode.addLink(index);
         });
         this.sensorNodes.push(newNode);
     }
@@ -36,7 +36,20 @@ class Network {
      * Display the sensor network. 
      */
     display () {
-        this.sensorNodes.map ((node) => node.display());
+        push ();
+            let linkedNode;
+            this.sensorNodes.forEach ((node) => {
+                noStroke();
+                fill(0, 255, 0);
+                ellipse(node.position.x, node.position.y, 8, 8);
+                stroke(255);
+                strokeWeight(0.2);
+                node.links.forEach ((linkedNodeIndex) => {
+                    linkedNode = this.sensorNodes[linkedNodeIndex];
+                    line (node.position.x, node.position.y, linkedNode.position.x, linkedNode.position.y);
+                });
+            });
+        pop();
     }
 
     /**
@@ -50,8 +63,8 @@ class Network {
             coveredGrids = [];          // To count each grid only once.  ..... 
         this.sensorNodes.map ((sensorNode) => {     // For each node..... 
             pointA = sensorNode.position;
-            sensorNode.links.map ((linkedNode) => {         // Cover all it's linked nodes...... 
-                pointB = linkedNode.position;
+            sensorNode.links.map ((linkedNodeIndex) => {         // Cover all it's linked nodes...... 
+                pointB = this.sensorNodes[linkedNodeIndex].position;
                 grid.map ((cell, index) => {            // Go through every grid cell.... 
                     if (!coveredGrids.includes(index) && collideLineRect (pointA.x, pointA.y, pointB.x, pointB.y, cell.position.x, cell.position.y, cell.resolution, cell.resolution)) {
                         coveredGrids.push(index);
