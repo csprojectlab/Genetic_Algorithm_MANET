@@ -110,17 +110,19 @@ class Population {
         let newNetworks = [],
             selectedNetwork,
             elitismOffset = 0;
-        if (this.elitism) {
-            newNetworks.push(this.networks[this.bestNetworkIndex])
-            elitismOffset = 1;
-        }
-        for (let i = elitismOffset; i < this.size; i++) {
-            selectedNetwork = this.tournamentSelection();
-            if (random (1) < 0.03)
-                selectedNetwork.addSensorNode();
-            newNetworks.push(selectedNetwork)
-        }
-        this.networks = newNetworks;
+        // if (this.elitism) {
+        //     newNetworks.push(this.networks[this.bestNetworkIndex])
+        //     elitismOffset = 1;
+        // }
+        // for (let i = elitismOffset; i < this.size; i++) {
+        //     selectedNetwork = this.tournamentSelection();
+        //     if (random (1) < 0.03) {
+        //         console.log("New node added....")
+        //         selectedNetwork.addSensorNode();
+        //     }
+        //     newNetworks.push(selectedNetwork)
+        // }
+        // this.networks = newNetworks;
         return true;     // Population evolved to next generation... 
     }
 
