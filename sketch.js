@@ -7,7 +7,7 @@ const C_WIDTH = 1200,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03;
-var numberOfSensorNodes = 6,
+var numberOfSensorNodes = 7,
     population,
     grid = [],          // Background blue grid. 
     yellowBox = { x : 210, y : 120, width : 120, height : 90};          // This is very important aspect. 

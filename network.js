@@ -4,6 +4,7 @@
 class Network {
     constructor (number_of_sensor_nodes) {
         this.sensorNodes = new Array(number_of_sensor_nodes);
+        this.fitness = 0;
     }
 
     /**
@@ -30,22 +31,28 @@ class Network {
             pointB,
             cellsCovered = 0,
             coveredGrids = [];          // To count each grid only once.  ..... 
-        // For each sensor node. 
-        for (let sNode = 0; sNode < this.sensorNodes.length; sNode++) {
-            pointA = this.sensorNodes[sNode].position;
-            // Go through all its links. ..... 
-            for (let linkNode = 0; linkNode < this.sensorNodes[sNode].links.length; linkNode++) {
-                pointB = this.sensorNodes[sNode].links[linkNode].position;
-                // Check grid rectangles collision...... 
-                for (let r = 0; r < grid.length; r++) {
-                    if (!coveredGrids.includes(r) && collideLineRect (pointA.x, pointA.y, pointB.x, pointB.y, grid[r].position.x, grid[r].position.y, grid[r].resolution, grid[r].resolution)) {
-                        coveredGrids.push(r);
+        this.sensorNodes.map ((sensorNode) => {     // For each node..... 
+            pointA = sensorNode.position;
+            sensorNode.links.map ((linkedNode) => {         // Cover all it's linked nodes...... 
+                pointB = linkedNode.position;
+                grid.map ((cell, index) => {            // Go through every grid cell.... 
+                    if (!coveredGrids.includes(index) && collideLineRect (pointA.x, pointA.y, pointB.x, pointB.y, cell.position.x, cell.position.y, cell.resolution, cell.resolution)) {
+                        coveredGrids.push(index);
                         cellsCovered++;
                     }
-                }
-            }
-        }
+                });
+            });
+        });
         return cellsCovered;
+    }
+
+    /**
+     * Function to calculate number of links in this sensor network.... 
+     */
+    findNumberOfLinks () {
+        let linkCount = 0;
+        this.sensorNodes.map ((sensorNode) => { linkCount += sensorNode.links.length });
+        return linkCount / 2;
     }
 
     /**
@@ -55,6 +62,8 @@ class Network {
     calculateFitness (total_cells) {
         // find cells covered by this network. 
         let coveredRatio =  this.findCellsCovered() / total_cells;
+        let linkCount = this.findNumberOfLinks();
+        // find number of sensors and number of links...... 
         return coveredRatio;
     }
 }
