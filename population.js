@@ -118,7 +118,7 @@ class Population {
         }
         for (let i = elitismOffset; i < this.size; i++) {
             selectedNetwork = this.tournamentSelection();       // A copy of best network in tournament is returned.   
-            if (random(1) < 0.1) {
+            if (random(1) < 0.05) {         // Be carefull here.... 
                 if (random(1) < 0.1) {               // Add or delete a sensor node... 
                     selectedNetwork.addSensorNode();
                 } else {              

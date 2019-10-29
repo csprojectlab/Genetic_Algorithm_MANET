@@ -8,8 +8,8 @@ const C_WIDTH = 1200,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03,
       GENERATIONS_PER_POPULATION = 200,
-      ADD_NODE_M_R = 0.03,
-      DELETE_NODE_M_R = 0.01;
+      NODE_MR = 0.05,
+      LINK_MR = 1-NODE_MR;
 var numberOfSensorNodes = 2,
     population,
     grid = [],          // Background blue grid. 
@@ -20,7 +20,10 @@ var numberOfSensorNodes = 2,
     // Interaction parameters....... 
     displayLinks = false,
     displayGrid = false,
-    displayYellowBox = false;
+    displayYellowBox = true,
+    // Graph structures....
+    linkHistory = [],
+    nodeHistory = [];
 /**
  * Function to randomly generate sensor network. 
  */
@@ -135,7 +138,7 @@ function draw () {
         translate(width / 2, 0);
         stroke(255);
         strokeWeight(5)
-        line (0, 0, 0, height / 2);
+        line (0, 0, 0, height);
         displayAllSimulations();
     pop();
     push();
@@ -143,7 +146,14 @@ function draw () {
         stroke(255);
         strokeWeight(5);
         line (0, 0, width, 0);
-        displayGraph();
+        displayParameters();
+    pop();
+    push ();
+        translate (width / 2, height / 2);
+        stroke(255);
+        strokeWeight(5)
+        line (0, height / 4, width, height / 4)
+        drawLinkGraph();
     pop();
     if (displayYellowBox) {
         stroke (255, 255, 0);
@@ -181,6 +191,41 @@ function displayAllSimulations() {
     population.displayAll(displayLinks);
 }
 
-function displayGraph() {
+function displayParameters() {
+    let offset = 30,
+        y = 0;
+    // stroke(0, 255, 255);
+    fill(0, 255, 0)
+    noStroke();
+    textSize(24);
+    text ("Population: " + POPULATION_SIZE, 15, y += offset)
+    text ("Generations/Population: " + GENERATIONS_PER_POPULATION, 15, y += offset)
+    text ("Tournament Size: " + TOURNAMENT_SIZE, 15, y += offset)
+    text ("Current Domain: " + domainCount, 15, y += offset);
+    text ("Temperature: " + TEMPERATURE, 15, y += offset);
+    text ("Cooling Rate: " + COOLING_RATE, 15, y += offset);
+    text ("Current Generation: " + population.currentGeneration + "/" + GENERATIONS_PER_POPULATION, 15, y += offset)
+    text ("Domain Area Covered: " + nf ((population.networks[population.bestNetworkIndex].coveredRatio / findNumberOfCells()) * 100, 0, 2) + "%", 15, y += offset)
+    text ("Link Mutation Rate: " + LINK_MR, 15, y += offset);
+    text ("Node Mutation Rate: " + NODE_MR, 15, y += offset)
+}
 
+function drawLinkGraph () {
+    textSize(24);
+    noStroke();
+    fill(255, 255, 0);
+    text ("Links Count Graph", 200, 30)
+    if (linkHistory.length == GENERATIONS_PER_POPULATION)
+        linkHistory = [];
+    linkHistory.push(population.networks[population.bestNetworkIndex].findNumberOfLinks())
+    stroke(0, 0, 255);
+    strokeWeight(1);
+    let maxValue = linkHistory.reduce ((a, b) => Math.max(a, b)),
+        offset = 0,
+        xoffset = 20;
+    for (let i = 0; i < linkHistory.length; i++) {
+        line (xoffset + offset, 150, xoffset + offset, 150 - (linkHistory[i] / maxValue)*100);
+        xoffset += 1;
+        offset++;
+    }
 }
