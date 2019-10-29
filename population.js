@@ -105,7 +105,7 @@ class Population {
      */
     evolve () {
         this.currentGeneration++;
-        console.log(this.currentGeneration)
+        // console.log(this.currentGeneration)
         if (this.currentGeneration == this.generations)
             return false;           // No evolution happened.... limit reached... 
         let newNetworks = [],

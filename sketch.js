@@ -13,9 +13,10 @@ const C_WIDTH = 1200,
 var numberOfSensorNodes = 2,
     population,
     grid = [],          // Background blue grid. 
-    yellowBox = { x : 210, y : 120, width : 150, height : 90};          // This is very important aspect. 
-var added = 0,
-    deleted = 0;
+    yellowBox = { x : 210, y : 120, width : 150, height : 90},          // This is very important aspect. 
+    // yellowBox = {x : 0, y : 0, width : 600, height : 330},
+    domainCount = 1,
+    coveredRatio = 0;
 /**
  * Function to randomly generate sensor network. 
  */
@@ -79,6 +80,8 @@ function generateBackgroundGrid () {
   * Function to increase yellow box size.... 
   */
 function increaseYellowBoxSize () {
+    if (yellowBox.x == 0 && yellowBox.y == 0 && yellowBox.width == width / 2 && yellowBox.height == height / 2)
+        return false;
     yellowBox.x -= RESOLUTION;
     if (yellowBox.x <= 0)   yellowBox.x = 0;
     yellowBox.y -= RESOLUTION;
@@ -87,6 +90,7 @@ function increaseYellowBoxSize () {
     if (yellowBox.width >= width / 2)   yellowBox.width = width / 2;
     yellowBox.height += (2*RESOLUTION);
     if (yellowBox.height >= height / 2)     yellowBox.height = height / 2;
+    return true;
 }
 
 function setup () {
@@ -139,11 +143,16 @@ function displaySimulation() {
     population.fittest();
    
     if (!population.evolve()) {
-        console.log("Population evolved.")
-        console.log("A: " + added, "D: " + deleted)
+        console.log("Domain Ended: ", domainCount)
+        domainCount++;
+        coveredRatio = ((population.networks[population.bestNetworkIndex].findCellsCovered()) / (findNumberOfCells())) * 100;
+        console.log("Covered Ratio: ", coveredRatio)
         // noLoop();
         population.currentGeneration = 1;
-        increaseYellowBoxSize();
+        if (!increaseYellowBoxSize()) {
+            console.log("Finished.")
+            noLoop();
+        }
     }
     population.display();
 }
