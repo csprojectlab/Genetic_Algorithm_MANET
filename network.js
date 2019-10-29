@@ -22,9 +22,9 @@ class Network {
      */
     addSensorNode () {
         let newNode = generateSensorNode(),
-            tryLimit = 1000,        // If yellow box is full- isCloseEnough will always return true.... we need this limit to stop in such case... 
+            tryLimit = 20,        // If yellow box is full- isCloseEnough will always return true.... we need this limit to stop in such case... 
             counter = 0;
-        while (counter < tryLimit && isCloseEnough(this.sensorNodes, newNode)) {
+        while (isCloseEnough(this.sensorNodes, newNode)) {
             newNode = generateSensorNode();
             counter++;
         }

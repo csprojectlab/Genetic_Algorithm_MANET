@@ -105,7 +105,7 @@ class Population {
      */
     evolve () {
         this.currentGeneration++;
-        // console.log(this.currentGeneration)
+        console.log(this.currentGeneration)
         if (this.currentGeneration == this.generations)
             return false;           // No evolution happened.... limit reached... 
         let newNetworks = [],
@@ -113,14 +113,23 @@ class Population {
             elitismOffset = 0,
             randomNumber = 0;
         if (this.elitism) {
-            newNetworks.push(this.networks[this.bestNetworkIndex])
+            newNetworks.push(this.networks[this.bestNetworkIndex])      // Adding the best network already to the new generation... 
             elitismOffset = 1;
         }
         for (let i = elitismOffset; i < this.size; i++) {
-            selectedNetwork = this.tournamentSelection();
-            if (random(1) < 0.8) {
-                selectedNetwork.addSensorNode();
+            selectedNetwork = this.tournamentSelection();       // A copy of best network in tournament is returned.   
+            if (random(1) < 0.1) {
+                if (random(1) < 0.1) {               // Add or delete a sensor node... 
+                    selectedNetwork.addSensorNode();
+                } else {              
+                    selectedNetwork.deleteSensorNode();
+                }
+            } else {        // delete a link.... 
+                let sensorIndex = floor(random(selectedNetwork.sensorNodes.length)),
+                    linkedNodeIndex = floor(random(selectedNetwork.sensorNodes[sensorIndex].links.length));
+                selectedNetwork.deleteSensorLink(sensorIndex, linkedNodeIndex);
             }
+            
             newNetworks.push(selectedNetwork)
         }
         this.networks = newNetworks;

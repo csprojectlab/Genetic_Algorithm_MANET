@@ -7,13 +7,15 @@ const C_WIDTH = 1200,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03,
-      GENERATIONS_PER_POPULATION = 600,
+      GENERATIONS_PER_POPULATION = 200,
       ADD_NODE_M_R = 0.03,
       DELETE_NODE_M_R = 0.01;
-var numberOfSensorNodes = 3,
+var numberOfSensorNodes = 2,
     population,
     grid = [],          // Background blue grid. 
     yellowBox = { x : 210, y : 120, width : 150, height : 90};          // This is very important aspect. 
+var added = 0,
+    deleted = 0;
 /**
  * Function to randomly generate sensor network. 
  */
@@ -52,7 +54,7 @@ function generateSensorNode () {
 function isCloseEnough (sensorNetwork, sensorNode) {
     for (let i = 0; i < sensorNetwork.length; i++) {
         let d = dist (sensorNetwork[i].position.x, sensorNetwork[i].position.y, sensorNode.position.x, sensorNode.position.y);
-        if (d < 10)
+        if (d < (COMMUNICATION_RANGE / 2))
             return true;
     }
     return false;
@@ -72,6 +74,21 @@ function generateBackgroundGrid () {
 /**
  * Setup function. 
  */
+
+ /**
+  * Function to increase yellow box size.... 
+  */
+function increaseYellowBoxSize () {
+    yellowBox.x -= RESOLUTION;
+    if (yellowBox.x <= 0)   yellowBox.x = 0;
+    yellowBox.y -= RESOLUTION;
+    if (yellowBox.y <= 0)   yellowBox.y = 0;
+    yellowBox.width += (2*RESOLUTION);
+    if (yellowBox.width >= width / 2)   yellowBox.width = width / 2;
+    yellowBox.height += (2*RESOLUTION);
+    if (yellowBox.height >= height / 2)     yellowBox.height = height / 2;
+}
+
 function setup () {
     createCanvas(C_WIDTH, C_HEIGHT);
     background(0)
@@ -81,6 +98,7 @@ function setup () {
     grid = generateBackgroundGrid();
     population = new Population (POPULATION_SIZE, MUTATION_RATE, elitism, TOURNAMENT_SIZE, numberOfCells, GENERATIONS_PER_POPULATION);
     population.boot(sensorNetwork, TEMPERATURE, COOLING_RATE);
+    // frameRate(5)
 }
 
 /**
@@ -122,7 +140,10 @@ function displaySimulation() {
    
     if (!population.evolve()) {
         console.log("Population evolved.")
-        noLoop();
+        console.log("A: " + added, "D: " + deleted)
+        // noLoop();
+        population.currentGeneration = 1;
+        increaseYellowBoxSize();
     }
     population.display();
 }
