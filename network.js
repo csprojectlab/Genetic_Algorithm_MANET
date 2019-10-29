@@ -28,13 +28,17 @@ class Network {
             newNode = generateSensorNode();
             counter++;
         }
-        if (counter == tryLimit)    return;
+        if (counter == tryLimit)   {
+            console.log("not added")
+            return;
+        } 
         // Now we have to generate links.... 
         this.sensorNodes.forEach ((sensorNode, index) => {
             if (newNode.distanceFrom(sensorNode) < COMMUNICATION_RANGE)
                 newNode.addLink(index);
         });
         this.sensorNodes.push(newNode);
+        // console.log(this.sensorNodes.length + " is the size...")
     }
 
     /**
@@ -65,6 +69,17 @@ class Network {
         if (sensor_index == linked_sensor_index)    return;
         this.sensorNodes[sensor_index].deleteSensorLink (linked_sensor_index);
         this.sensorNodes[linked_sensor_index].deleteSensorLink (sensor_index);
+    }
+
+    /**
+     * Creating a copy of this network.... 
+     */
+    copy () {
+        let newNetwork = new Network (this.sensorNodes.length);
+        let sensorNodesCopy = [];
+        this.sensorNodes.forEach ((node) => sensorNodesCopy.push(node.copy()))
+        newNetwork.addSensorNodes(sensorNodesCopy);
+        return newNetwork;
     }
 
     /**
@@ -128,8 +143,10 @@ class Network {
     calculateFitness (total_cells) {
         // find cells covered by this network. 
         // find number of sensors and number of links...... 
-        this.coveredRatio =  this.findCellsCovered() / total_cells;
-        let fitness = this.coveredRatio / (this.sensorNodes.length * this.findNumberOfLinks());
+        this.coveredRatio =  this.findCellsCovered()// / total_cells;
+        // let fitness = pow (this.coveredRatio, 2) / (this.sensorNodes.length * this.findNumberOfLinks());
+        let fitness = (pow (this.coveredRatio, 2)) - this.sensorNodes.length - this.findNumberOfLinks();
+        // console.log(this.coveredRatio)
         return fitness;
     }
 }

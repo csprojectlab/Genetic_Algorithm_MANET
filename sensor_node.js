@@ -54,6 +54,15 @@ class SensorNode {
     }
 
     /**
+     * Creating a copy of this node.... 
+     */
+    copy () {
+        let newNode = new SensorNode (this.position.x, this.position.y);
+        newNode.addLinks (this.links.slice());
+        return newNode;
+    }
+
+    /**
      * Display function. 
      */
     display () {

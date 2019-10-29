@@ -7,11 +7,13 @@ const C_WIDTH = 1200,
       TOURNAMENT_SIZE = 10,
       TEMPERATURE = 1000,
       COOLING_RATE = 0.03,
-      GENERATIONS_PER_POPULATION = 100;
+      GENERATIONS_PER_POPULATION = 600,
+      ADD_NODE_M_R = 0.03,
+      DELETE_NODE_M_R = 0.01;
 var numberOfSensorNodes = 3,
     population,
     grid = [],          // Background blue grid. 
-    yellowBox = { x : 210, y : 120, width : 120, height : 90};          // This is very important aspect. 
+    yellowBox = { x : 210, y : 120, width : 150, height : 90};          // This is very important aspect. 
 /**
  * Function to randomly generate sensor network. 
  */
@@ -50,7 +52,7 @@ function generateSensorNode () {
 function isCloseEnough (sensorNetwork, sensorNode) {
     for (let i = 0; i < sensorNetwork.length; i++) {
         let d = dist (sensorNetwork[i].position.x, sensorNetwork[i].position.y, sensorNode.position.x, sensorNode.position.y);
-        if (d < 20)
+        if (d < 10)
             return true;
     }
     return false;
@@ -117,11 +119,12 @@ function backgroundGrid () {
 function displaySimulation() {
     backgroundGrid();
     population.fittest();
-    population.display();
+   
     if (!population.evolve()) {
         console.log("Population evolved.")
         noLoop();
     }
+    population.display();
 }
 
 function displayParameters() {

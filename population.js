@@ -97,7 +97,7 @@ class Population {
                 fittestNetwork = this.networks[networkIndex];
             }
         });
-        return fittestNetwork;
+        return fittestNetwork.copy();
     }
 
     /**
@@ -105,24 +105,25 @@ class Population {
      */
     evolve () {
         this.currentGeneration++;
+        // console.log(this.currentGeneration)
         if (this.currentGeneration == this.generations)
             return false;           // No evolution happened.... limit reached... 
         let newNetworks = [],
             selectedNetwork,
-            elitismOffset = 0;
-        // if (this.elitism) {
-        //     newNetworks.push(this.networks[this.bestNetworkIndex])
-        //     elitismOffset = 1;
-        // }
-        // for (let i = elitismOffset; i < this.size; i++) {
-        //     selectedNetwork = this.tournamentSelection();
-        //     if (random (1) < 0.03) {
-        //         console.log("New node added....")
-        //         selectedNetwork.addSensorNode();
-        //     }
-        //     newNetworks.push(selectedNetwork)
-        // }
-        // this.networks = newNetworks;
+            elitismOffset = 0,
+            randomNumber = 0;
+        if (this.elitism) {
+            newNetworks.push(this.networks[this.bestNetworkIndex])
+            elitismOffset = 1;
+        }
+        for (let i = elitismOffset; i < this.size; i++) {
+            selectedNetwork = this.tournamentSelection();
+            if (random(1) < 0.8) {
+                selectedNetwork.addSensorNode();
+            }
+            newNetworks.push(selectedNetwork)
+        }
+        this.networks = newNetworks;
         return true;     // Population evolved to next generation... 
     }
 
