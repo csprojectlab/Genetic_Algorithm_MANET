@@ -16,7 +16,11 @@ var numberOfSensorNodes = 2,
     yellowBox = { x : 210, y : 120, width : 150, height : 90},          // This is very important aspect. 
     // yellowBox = {x : 0, y : 0, width : 600, height : 330},
     domainCount = 1,
-    coveredRatio = 0;
+    coveredRatio = 0,
+    // Interaction parameters....... 
+    displayLinks = false,
+    displayGrid = false,
+    displayYellowBox = false;
 /**
  * Function to randomly generate sensor network. 
  */
@@ -93,6 +97,19 @@ function increaseYellowBoxSize () {
     return true;
 }
 
+function keyPressed() {
+    if (key == 'l' || key == 'L') {
+        displayLinks = !displayLinks;
+        console.log("Display Links: ", displayLinks);
+    } else if (key == 'g' || key == 'G') {
+        displayGrid = !displayGrid;
+        console.log("Display Grid: ", displayGrid);
+    } else if (key == 'y' || key == 'Y') {
+        displayYellowBox = !displayYellowBox;
+        console.log("Display yellow box: ", displayYellowBox);
+    }
+}
+
 function setup () {
     createCanvas(C_WIDTH, C_HEIGHT);
     background(0)
@@ -119,7 +136,7 @@ function draw () {
         stroke(255);
         strokeWeight(5)
         line (0, 0, 0, height / 2);
-        displayParameters();
+        displayAllSimulations();
     pop();
     push();
         translate(0, height / 2);
@@ -128,9 +145,11 @@ function draw () {
         line (0, 0, width, 0);
         displayGraph();
     pop();
-    stroke (255, 255, 0);
-    noFill()
-    rect (yellowBox.x, yellowBox.y, yellowBox.width, yellowBox.height)     // This is the range for initial generation of sensors. 
+    if (displayYellowBox) {
+        stroke (255, 255, 0);
+        noFill()
+        rect (yellowBox.x, yellowBox.y, yellowBox.width, yellowBox.height)     // This is the range for initial generation of sensors. 
+    }    
 }
 
 function backgroundGrid () {
@@ -139,7 +158,8 @@ function backgroundGrid () {
 }
 
 function displaySimulation() {
-    backgroundGrid();
+    if (displayGrid)
+        backgroundGrid();
     population.fittest();
    
     if (!population.evolve()) {
@@ -154,11 +174,11 @@ function displaySimulation() {
             noLoop();
         }
     }
-    population.display();
+    population.display(displayLinks);
 }
 
-function displayParameters() {
-
+function displayAllSimulations() {
+    population.displayAll(displayLinks);
 }
 
 function displayGraph() {

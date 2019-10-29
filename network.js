@@ -85,20 +85,21 @@ class Network {
     /**
      * Display the sensor network. 
      */
-    display () {
+    display (enableLinks) {
         push ();
             let linkedNode;
             this.sensorNodes.forEach ((node) => {
                 noStroke();
                 fill(0, 255, 0);
                 ellipse(node.position.x, node.position.y, 8, 8);
-                stroke(255);
-                strokeWeight(0.2);
-                node.links.forEach ((linkedNodeIndex) => {
-                    
-                    linkedNode = this.sensorNodes[linkedNodeIndex];
-                    line (node.position.x, node.position.y, linkedNode.position.x, linkedNode.position.y);
-                });
+                if (enableLinks) {                
+                    stroke(255);
+                    strokeWeight(0.2);
+                    node.links.forEach ((linkedNodeIndex) => {                    
+                        linkedNode = this.sensorNodes[linkedNodeIndex];
+                        line (node.position.x, node.position.y, linkedNode.position.x, linkedNode.position.y);
+                    });
+                }
             });
         pop();
     }

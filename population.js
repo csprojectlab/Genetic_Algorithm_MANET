@@ -139,8 +139,15 @@ class Population {
     /**
      * Display the best network... 
      */
-    display () {
-        this.networks[this.bestNetworkIndex].display();
+    display (enableLinks) {
+        this.networks[this.bestNetworkIndex].display(enableLinks);
+    }
+
+    /**
+     * Display all the networks.... 
+     */
+    displayAll (enableLinks) {
+        this.networks.forEach ((network) => network.display(enableLinks));
     }
 
 }
