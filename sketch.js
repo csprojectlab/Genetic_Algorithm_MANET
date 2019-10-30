@@ -19,9 +19,9 @@ var numberOfSensorNodes = 2,
     domainCount = 1,
     coveredRatio = 0,
     // Interaction parameters....... 
-    displayLinks = false,
+    displayLinks = true,
     displayGrid = false,
-    displayYellowBox = true,
+    displayYellowBox = false,
     // Graph structures....
     linkHistory = [],
     nodeHistory = [];

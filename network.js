@@ -94,7 +94,7 @@ class Network {
                 ellipse(node.position.x, node.position.y, 8, 8);
                 if (enableLinks) {                
                     stroke(255);
-                    strokeWeight(0.2);
+                    strokeWeight(0.5);
                     node.links.forEach ((linkedNodeIndex) => {                    
                         linkedNode = this.sensorNodes[linkedNodeIndex];
                         line (node.position.x, node.position.y, linkedNode.position.x, linkedNode.position.y);

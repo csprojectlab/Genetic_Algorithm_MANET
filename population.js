@@ -111,7 +111,8 @@ class Population {
         let newNetworks = [],
             selectedNetwork,
             elitismOffset = 0,
-            randomNumber = 0;
+            sensorIndices = [],
+            sensorIndex;
         if (this.elitism) {
             newNetworks.push(this.networks[this.bestNetworkIndex])      // Adding the best network already to the new generation... 
             elitismOffset = 1;
@@ -125,9 +126,17 @@ class Population {
                     selectedNetwork.deleteSensorNode();
                 }
             } else {        // delete a link.... 
-                let sensorIndex = floor(random(selectedNetwork.sensorNodes.length)),
-                    linkedNodeIndex = floor(random(selectedNetwork.sensorNodes[sensorIndex].links.length));
-                selectedNetwork.deleteSensorLink(sensorIndex, linkedNodeIndex);
+                for (let i = 0; i < selectedNetwork.sensorNodes.length / 2; i++) {
+                    sensorIndex = floor(random(selectedNetwork.sensorNodes.length))
+                    if (!sensorIndices.includes(sensorIndex))   sensorIndices.push(sensorIndex);
+                }                    
+                sensorIndices.forEach ((sensor_index) => {
+                    for (let i = 0; i < selectedNetwork.sensorNodes[sensor_index].links.length; i++) {
+                        let linkedNodeIndex = floor(random(selectedNetwork.sensorNodes[sensor_index].links.length));
+                        selectedNetwork.deleteSensorLink(sensor_index, linkedNodeIndex);
+                    }
+                });   
+                sensorIndices = [];                 
             }
             
             newNetworks.push(selectedNetwork)
