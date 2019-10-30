@@ -19,12 +19,13 @@ var numberOfSensorNodes = 2,
     domainCount = 1,
     coveredRatio = 0,
     // Interaction parameters....... 
-    displayLinks = true,
+    displayLinks = false,
     displayGrid = false,
     displayYellowBox = false,
+    pause = false,
     // Graph structures....
     linkHistory = [],
-    nodeHistory = [];
+    domainAreaHistory = [];
 /**
  * Function to randomly generate sensor network. 
  */
@@ -111,6 +112,10 @@ function keyPressed() {
     } else if (key == 'y' || key == 'Y') {
         displayYellowBox = !displayYellowBox;
         console.log("Display yellow box: ", displayYellowBox);
+    } else if (key == 'p' || key == 'P') {
+        pause = !pause;
+        if (pause)     noLoop();
+        else   loop();
     }
 }
 
@@ -155,6 +160,7 @@ function draw () {
         strokeWeight(5)
         line (0, height / 4, width, height / 4)
         drawLinkGraph();
+        drawAreaHistoryGraph();
     pop();
     if (displayYellowBox) {
         stroke (255, 255, 0);
@@ -176,7 +182,7 @@ function displaySimulation() {
     if (!population.evolve()) {
         console.log("Domain Ended: ", domainCount)
         domainCount++;
-        coveredRatio = ((population.networks[population.bestNetworkIndex].findCellsCovered()) / (findNumberOfCells())) * 100;
+        coveredRatio = (population.networks[population.bestNetworkIndex].areaCovered) * 100;
         console.log("Covered Ratio: ", coveredRatio)
         // noLoop();
         population.currentGeneration = 1;
@@ -184,6 +190,7 @@ function displaySimulation() {
             console.log("Finished.")
             noLoop();
         }
+        population.numberOfCells = findNumberOfCells();
     }
     population.display(displayLinks);
 }
@@ -206,7 +213,7 @@ function displayParameters() {
     text ("Temperature: " + TEMPERATURE, 15, y += offset);
     text ("Cooling Rate: " + COOLING_RATE, 15, y += offset);
     text ("Current Generation: " + population.currentGeneration + "/" + GENERATIONS_PER_POPULATION, 15, y += offset)
-    text ("Domain Area Covered: " + nf ((population.networks[population.bestNetworkIndex].coveredRatio / findNumberOfCells()) * 100, 0, 2) + "%", 15, y += offset)
+    text ("Domain Area Covered: " + nf ((population.networks[population.bestNetworkIndex].areaCovered) * 100, 0, 2) + "%", 15, y += offset)
     text ("Link Mutation Rate: " + LINK_MR, 15, y += offset);
     text ("Node Mutation Rate: " + NODE_MR, 15, y += offset)
 }
@@ -226,6 +233,26 @@ function drawLinkGraph () {
         xoffset = 20;
     for (let i = 0; i < linkHistory.length; i++) {
         line (xoffset + offset, 150, xoffset + offset, 150 - (linkHistory[i] / maxValue)*100);
+        xoffset += 1;
+        offset++;
+    }
+}
+
+function drawAreaHistoryGraph () {
+    textSize(24);
+    noStroke();
+    fill(255, 255, 0);
+    text ("Area Covered Graph", 200, 195);
+    if (domainAreaHistory.length == GENERATIONS_PER_POPULATION)
+        domainAreaHistory = [];
+    domainAreaHistory.push(population.networks[population.bestNetworkIndex].areaCovered);
+    stroke(0, 0, 255);
+    strokeWeight(1);
+    let maxValue = domainAreaHistory.reduce(REDUCER),
+        offset = 0,
+        xoffset = 20;
+    for (let i = 0; i < domainAreaHistory.length; i++) {
+        line (xoffset + offset, 320, xoffset + offset, 320 - (domainAreaHistory[i] / maxValue)*100);
         xoffset += 1;
         offset++;
     }

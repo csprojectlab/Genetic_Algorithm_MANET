@@ -7,7 +7,8 @@
 class Network {
     constructor (number_of_sensor_nodes) {
         this.sensorNodes = new Array(number_of_sensor_nodes);
-        this.coveredRatio = 0;      // It should reach 1
+        this.coveredRatio = 0;      
+        this.areaCovered = 0;
     }
 
     /**
@@ -145,6 +146,7 @@ class Network {
         // find cells covered by this network. 
         // find number of sensors and number of links...... 
         this.coveredRatio =  this.findCellsCovered()// / total_cells;
+        this.areaCovered = this.coveredRatio / total_cells;
         // let fitness = pow (this.coveredRatio, 2) / (this.sensorNodes.length * this.findNumberOfLinks());
         let fitness = (pow (this.coveredRatio, 2)) - this.sensorNodes.length - this.findNumberOfLinks();
         // console.log(this.coveredRatio)
