@@ -9,7 +9,8 @@ const C_WIDTH = 1200,
       COOLING_RATE = 0.03,
       GENERATIONS_PER_POPULATION = 200,
       NODE_MR = 0.05,
-      LINK_MR = 1-NODE_MR;
+      LINK_MR = 1-NODE_MR,
+      REDUCER = (current_max, value) => Math.max(current_max, value); 
 var numberOfSensorNodes = 2,
     population,
     grid = [],          // Background blue grid. 
@@ -220,7 +221,7 @@ function drawLinkGraph () {
     linkHistory.push(population.networks[population.bestNetworkIndex].findNumberOfLinks())
     stroke(0, 0, 255);
     strokeWeight(1);
-    let maxValue = linkHistory.reduce ((a, b) => Math.max(a, b)),
+    let maxValue = linkHistory.reduce (REDUCER),
         offset = 0,
         xoffset = 20;
     for (let i = 0; i < linkHistory.length; i++) {
