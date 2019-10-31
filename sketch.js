@@ -20,7 +20,7 @@ var numberOfSensorNodes = 2,
     coveredRatio = 0,
     // Interaction parameters....... 
     displayLinks = false,
-    displayGrid = false,
+    displayGrid = true,
     displayYellowBox = false,
     pause = false,
     // Graph structures....
@@ -74,9 +74,11 @@ function isCloseEnough (sensorNetwork, sensorNode) {
  * Function to generate grid
  */
 function generateBackgroundGrid () {
-    let temp = [];
-    for (let j = 0; j < height / 2; j += RESOLUTION) 
-        for (let i = 0; i < width / 2; i += RESOLUTION)
+    let temp = [],
+        jLimit = yellowBox.y + yellowBox.height,
+        xLimit = yellowBox.x + yellowBox.width;
+    for (let j = yellowBox.y; j < jLimit; j += RESOLUTION) 
+        for (let i = yellowBox.x; i < xLimit; i += RESOLUTION)
             temp.push (new Grid (i, j));
     return temp;
 }
@@ -170,7 +172,7 @@ function draw () {
 }
 
 function backgroundGrid () {
-   for (let g of grid)
+   for (let g of grid) 
         g.show();
 }
 
@@ -179,19 +181,20 @@ function displaySimulation() {
         backgroundGrid();
     population.fittest();
    
-    if (!population.evolve()) {
-        console.log("Domain Ended: ", domainCount)
-        domainCount++;
-        coveredRatio = (population.networks[population.bestNetworkIndex].areaCovered) * 100;
-        console.log("Covered Ratio: ", coveredRatio)
-        // noLoop();
-        population.currentGeneration = 1;
-        if (!increaseYellowBoxSize()) {
-            console.log("Finished.")
-            noLoop();
-        }
-        population.numberOfCells = findNumberOfCells();
-    }
+     if (!population.evolve()) {
+         console.log("Domain Ended: ", domainCount)
+         domainCount++;
+         coveredRatio = (population.networks[population.bestNetworkIndex].areaCovered) * 100;
+         console.log("Covered Ratio: ", coveredRatio)
+         // noLoop();
+         population.currentGeneration = 1;
+         if (!increaseYellowBoxSize()) {
+             console.log("Finished.")
+             noLoop();
+         }
+         grid = generateBackgroundGrid();
+         population.numberOfCells = findNumberOfCells();
+     }
     population.display(displayLinks);
 }
 
