@@ -134,7 +134,7 @@ class Population {
       selectedNetwork = this.tournamentSelection(); // A copy of best network in tournament is returned.
       if (random(1) < 0.05) {
         // Be carefull here....
-        if (random(1) < 0.1) {
+        if (random(1) < 0.3) {
           // Add or delete a sensor node...
           selectedNetwork.addSensorNode();
         } else {
@@ -150,7 +150,7 @@ class Population {
         sensorIndices.forEach(sensor_index => {
           for (
             let i = 0;
-            i < selectedNetwork.sensorNodes[sensor_index].links.length;
+            i < selectedNetwork.sensorNodes[sensor_index].links.length / 2;
             i++
           ) {
             let linkedNodeIndex = floor(
